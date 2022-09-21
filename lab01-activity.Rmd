@@ -20,8 +20,8 @@ knitr::opts_chunk$set(echo = TRUE)
 The following code will ensure you have the necessary proxy settings in your ssh config. It also creates a symbolic link (like a shortcut) to the directory that contains the course files. If this is nonsense to you, don't worry about it and just read on. *If you are running this file for the second+ time, then you need to comment out these lines by adding # at the start of both of them.*
 
 ```{bash}
-mkdir ~/MBB243/
-ln -s /local-scratch/course_files/MBB243/ ~/files
+#mkdir ~/MBB243/
+#ln -s /local-scratch/course_files/MBB243/ ~/files
 ```
 
 The first run of the code chunk above (or the first time you knit this document) should automatically generate a link to the folder that contains all of the files required for our course this semester. You don't have to worry about what this is doing, but we do need this section in here for the first run.
@@ -46,11 +46,11 @@ Each RStudio user is given a home directory on the course server under `/localho
 Add R code and Bash code to the two empty code blocks below, respectively, to print out your current working directory. Add a comment to one of the code blocks that is just the full path to your home directory similar to the examples above.
 
 ```{r}
-
+getwd()
 ```
 
 ```{bash, engine.opts='-l'}
-
+pwd
 ```
 ## Other extremely useful bash commands
 
@@ -108,7 +108,7 @@ Basic variables store a single value that can be changed over time within your p
 Do you want to type that whole directory or paste it into your code every time you need to refer to a file there? Me neither! We can instead create a variable that stores that information and use it as a shortcut to represent that path. In bash, here's how we can create a variable named `DATA` and store this information in it. The next few lines show how it can be put to use various ways. This is a bit irrelevant for this directory since we created a symbolic link to it above and that acts as a shortcut but it isn't as versatile. For example, from any working directory, you can use $DATA to refer to that file path but you would need to be in your home directory to use the symbolic link (`files`) or specify the path to that link (`~/files`) if you are in another directory. 
 
 ```{bash, engine.opts='-l'}
-DATA="/local-scratch/course_files/MBB243/" 
+  
 # NOTE: if you aren't using the course server you will need to copy the contents of this directory to whatever computer you are running Rstudio on.
 
 # print the contents of our new variable with the echo command
@@ -151,8 +151,10 @@ The second line should be:
 Be careful here with the distinction between `>` and `>>`. The code should only "append" lines to the file if/when necessary (i.e. when re-run you will not get additional lines in the file). You can check that your code is working by running the chunk more than once and then verifying the contents of the file. If you are so inclined, you can even add a line to your code chunk that will report the current number of lines in the file each time the code chunk is run. Give it a try if you're feeling ambitious! By the end of this lab you will need to have completed this such that you have a bash_profile file with those two lines in it. See the instructor or TA for help if you don't think you succeeded. The easist way to confirm is to run this command in your terminal (not in Rmarkdown) and looking at the contents:
 
 `cat ~/.bash_profile`
-
-**DELETE THIS TEXT AND PUT YOUR NEW CODE CHUNK HERE**
+```{bash echo=TRUE}
+echo "source ~/.bashrc" > ~/.bash_profile
+echo "DATA=/local-scratch/course_files/MBB243/" >> ~/.bash_profile
+```
 
 ## Setting a variable in R
 
@@ -202,7 +204,7 @@ The R language has many benefits for the analysis of data types commonly produce
 ```{r}
 #install.packages("reticulate")
 library(reticulate)
-use_python("/usr/bin/python3")
+use_python("~/miniconda3/bin/python")
 ```
 
 When we want to use Python instead of R we simply need to change the first part of the code block to specify the language. Although you can't easily tell from the example below, the code is being interpreted as Python code. The two examples below show you how switching between the two interpreters can yield different results even if the syntax is "valid" for both. 
@@ -231,17 +233,17 @@ To run Python code we always need to ensure we've loaded the `reticulate` R pack
 
 **Task** Set eval=TRUE in the two chunks below and run them (in order!).
 
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 library(reticulate)
-use_python("miniconda3/bin/python")
+use_python("~/miniconda3/bin/python")
 use_condaenv("base")
 
 ```
 
 The next code block simply prints the path to the python executable that is used and then loads and tests some functionality provided by the BioPython library. 
 
-```{python, eval=FALSE}
-
+```{python, eval=TRUE}
+import sys
 sys.executable
 from Bio.Seq import Seq
 my_seq = Seq("AGTACACTGGT")
@@ -273,7 +275,7 @@ At the end of every lab, replace TODO with DONE to the left of each task to indi
 |status|task|
 |-|-|
 |DONE|This file has been knit|
-|TODO| My .bashrc file exists|
-|TODO| Miniconda is installed|
-|TODO| I was able to install both Bioconda and samtools using conda|
-|TODO| The last few code chunks that run Python code run without errors when I knit this document|
+|DONE| My .bashrc file exists|
+|DONE| Miniconda is installed|
+|DONE| I was able to install both Bioconda and samtools using conda|
+|DONE| The last few code chunks that run Python code run without errors when I knit this document|
